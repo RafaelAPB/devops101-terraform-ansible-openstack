@@ -1,0 +1,22 @@
+---
+- hosts: servers
+  gather_facts: False
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  pre_tasks:
+    # A mininal Python is required in instances managed by Ansible
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt-get -y update && apt-get install -y python-simplejson)
+      changed_when: False
+
+
+
+# This Second Play install the required software in web servers
+- hosts: servers
+  gather_facts: True
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  roles:
+    - nodejs

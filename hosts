@@ -1,0 +1,12 @@
+# The local deployment host VM
+[terraform_mgmt]
+localhost           ansible_connection=local
+
+# Contains the web servers at backend network
+[servers]
+web1
+web2
+
+# Modify the line with the ansible_host for the public IP address of your Tenant
+web1        ansible_host=100.64.14.43 ansible_user=ubuntu ansible_connection=ssh
+web2        ansible_host=100.64.14.42 ansible_user=ubuntu ansible_connection=ssh

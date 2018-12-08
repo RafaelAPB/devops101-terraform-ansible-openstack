@@ -1,0 +1,36 @@
+---
+# File: main.yml
+# Type: task
+# Part: NodeJS
+
+## Install
+- include: install-raspberry.yml
+  when: ansible_architecture == 'armv6l' and ansible_distribution == 'Debian'
+# - include: install-armv7l.yml
+#   when: ansible_architecture == 'armv7l'
+- include: install-ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+
+## Configure proxy
+- name: NodeJS | NPM | Configure proxy
+  shell: npm config set proxy {{ npm_proxy }}
+  when: npm_proxy is defined
+
+- name: NodeJS | NPM | Configure registry
+  shell: npm config set registry {{ nodejs_npm_registry }}
+  when: nodejs_npm_registry != "https://registry.npmjs.org/"
+
+## Install yarn
+- include: install-yarn.yml
+  tags: web_nodejs_yarn
+
+## Install global packages
+- name: NodeJS | NPM | Install global packages
+  npm: name={{ item }} global=yes state=present registry={{ nodejs_npm_registry }}
+  with_items: "{{ nodejs_npm_modules }}"
+  when: nodejs_npm_modules is defined and nodejs_npm_modules_install|bool
+
+## Install supervisor service
+- include: configure-supervisor.yml
+  tags: web_nodejs_supervisor
+  when: docker

@@ -1,0 +1,86 @@
+---
+# File: playbook.yml
+# Type: playbook
+# @cli vagrant destroy; vagrant up; rm -rf fetched/*
+# @cli ansible-playbook -i vagrant_inventory playbook.yml
+
+- name: Set global facts
+  hosts: all
+  tags: always
+  tasks:
+    - debug: msg="System hostname is {{ ansible_hostname }}"
+    - set_fact: docker={{ ansible_virtualization_type is defined and ansible_virtualization_type == 'docker' and ansible_virtualization_role == 'guest' }}
+    - set_fact: ansible_fetched_base=fetched/{{ group_names[0] | default('') }}/{{ inventory_hostname }}
+
+- name: Execute playbook
+  hosts: all
+  become: yes
+  roles:
+    - role: ansible/setup
+      tags: ansible_setup
+    - role: ansible/facts
+      tags: ansible_facts
+    - role: system/docker
+      tags: system_docker
+    - role: system/boot
+      tags: system_boot
+    - role: system/sudo
+      tags: system_sudo
+    - role: system/ssh
+      tags: system_ssh
+    - role: system/apt
+      tags: system_apt
+    - role: system/ufw
+      tags: system_ufw
+    - role: system/ntp
+      tags: system_ntp
+    - role: system/td-agent
+      tags: system_td-agent
+    - role: system/fail2ban
+      tags: system_fail2ban
+    - role: system/mediainfo
+      tags: system_mediainfo
+    - role: system/clamav
+      tags: system_clamav
+    - role: system/kaspersky
+      tags: system_kaspersky
+    - role: system/apcups
+      tags: system_apcups
+    - role: system/journald
+      tags: system_journald
+    - role: system/metricbeat
+      tags: system_metricbeat
+    - role: system/packetbeat
+      tags: system_packetbeat
+    - role: system/graphics
+      tags: system_graphics
+    - role: database/beanstalkd
+      tags: database_beanstalkd
+    - role: database/mysql
+      tags: database_mysql
+    - role: database/mongodb
+      tags: database_mongodb
+    - role: database/redis
+      tags: database_redis
+    - role: web/apache2
+      tags: web_apache2
+    - role: web/nginx
+      tags: web_nginx
+    - role: web/nodejs
+      tags: web_nodejs
+    - role: web/php5
+      tags: web_php5
+    - role: web/varnish
+      tags: web_varnish
+    - role: networking/transmission
+      tags: networking_transmission
+    - role: networking/openvpn
+      tags: networking_openvpn
+    - role: networking/avahi
+      tags: networking_avahi
+    - role: networking/btsync
+      tags: networking_btsync
+    - role: networking/cntlm
+      tags: networking_cntlm
+    - role: networking/resolvconf
+      tags: networking_resolvconf

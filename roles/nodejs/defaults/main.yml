@@ -1,0 +1,32 @@
+---
+# File: main.yml
+# Type: defaults
+# Part: NodeJS
+
+# Aptitude state
+nodejs_branch: "node_6.x"
+nodejs_legacy_branch: "node_4.x"
+nodejs_apt_state: "latest"
+nodejs_validate_certs: yes
+
+nodejs_yarn_apt_state: "latest"
+nodejs_yarn_validate_certs: yes
+
+# Network configuration
+nodejs_bind_address: "0.0.0.0"
+nodejs_port_http: 80
+nodejs_port_https: 443
+
+# User and group
+nodejs_user: "www-data"
+nodejs_group: "www-data"
+
+# Default base directory (without trailing '/')
+nodejs_path: "/var/www"
+nodejs_args: "."
+
+# Npm modules
+nodejs_npm_registry: "https://registry.npmjs.org/"
+nodejs_distribution_release: false
+nodejs_npm_modules_install: true
+# nodejs_npm_modules:
